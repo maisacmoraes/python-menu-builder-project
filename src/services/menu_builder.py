@@ -29,9 +29,12 @@ class MenuBuilder:
         main_menu = []
 
         for dish in self.menu_data.dishes:
+            if not self.inventory.check_recipe_availability(dish.recipe):
+                return []
             if (
                 restriction is None
                 or restriction not in dish.get_restrictions()
+                or self.inventory.consume_recipe(dish.recipe)
             ):
                 main_menu.append(
                     {
@@ -41,4 +44,5 @@ class MenuBuilder:
                         "restrictions": dish.get_restrictions(),
                     },
                 )
+
         return main_menu
